@@ -1,0 +1,407 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[left=2.50cm, right=1.50cm,top=3.00cm, bottom=2.50cm]{geometry}
+\usepackage[spanish]{babel}
+\usepackage[superscript,compress,sort]{cite}
+\usepackage{wrapfig, framed, caption}
+\usepackage[export]{adjustbox}
+\usepackage[labelfont=bf]{caption}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage[font=small,skip=2pt]{caption}
+\usepackage{gensymb}
+\usepackage{titlesec}
+\usepackage{ragged2e}
+\usepackage[hidelinks]{hyperref}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\usepackage{siunitx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{cellspace} % This package is to manage spaces in cells
+\setlength\cellspacetoplimit{4pt}
+\setlength\cellspacebottomlimit{4pt}
+\usepackage{longtable}
+\usepackage{amssymb} % This package provides some arrows to plot reaction equilibria
+
+
+\usepackage{fancyhdr}% http://ctan.org/pkg/fancyhdr
+\pagestyle{fancy}% Change page style to fancy
+\fancyhf{}% Clear header/footer
+\fancyfoot[C]{}% \fancyfoot[R]{\thepage}
+\cfoot{\thepage}
+\lfoot{}
+\rfoot{}
+\lhead{}
+\rhead{}
+\renewcommand{\headrulewidth}{0.1pt}% Default \headrulewidth is 0.4pt
+\renewcommand{\footrulewidth}{0.1pt}% Default \footrulewidth is 0pt
+
+%Script para reducir el espaciado entre la bibliografia
+
+\newlength{\bibitemsep}\setlength{\bibitemsep}{.2\baselineskip plus .05\baselineskip minus .05\baselineskip}
+\newlength{\bibparskip}\setlength{\bibparskip}{0pt}
+\let\oldthebibliography\thebibliography
+\renewcommand\thebibliography[1]{%
+	\oldthebibliography{#1}%
+	\setlength{\parskip}{\bibitemsep}%
+	\setlength{\itemsep}{\bibparskip}%
+}
+
+
+%Sección de formateo de alineado de títulos de párrafos
+%\titleformat{\section}[block]{\fontsize{16}{15}\bfseries\filcenter}{\thesection.}{0.5em}{}
+\titleformat{\section}[block]{\fontsize{15}{15}\bfseries\filright}{\thesection.}{0.5em}{}
+\titleformat{\subsection}[block]{\fontsize{13}{12}\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}[block]{\fontsize{12}{15}\bfseries}{\thesubsubsection.}{0.5em}{}
+\titlespacing*{\subsubsection}{\parindent}{1ex}{1em}
+\titleformat{\paragraph}[block]{\fontsize{12}{15}\bfseries\itshape}{\theparagraph.}{0.2cm}{}
+\titlespacing*{\paragraph}{\parindent}{1ex}{1em}
+\setlength{\parindent}{0.8cm}
+\setcounter{secnumdepth}{4}
+
+\definecolor{coolblack}{rgb}{0.0, 0.18, 0.39}
+
+
+
+\begin{document}
+	
+\begin{center}
+	\Large
+	\textbf{Seminario Nro. 1:}\\
+	Ionización de Fármacos
+\end{center}
+
+\begin{center}
+	\noindent\rule{14cm}{2pt}
+\end{center}
+
+La ionización de un fármaco en los distintos compartimentos del organismo constituye un evento electrónico que presenta un rol preponderante en los procesos farmacéuticos, farmacocinéticos y farmacodinámicos que determinan la acción de un fármaco.\\
+
+En tal sentido, para comprender el mecanismo de acción de un fármaco resulta indispensable conocer sus propiedades ácido-base y su pKa, así como también poder anticipar cómo influirá el pH del medio en su grado de ionización.
+
+
+\section*{Objetivos}
+Teniendo en cuenta la importancia farmacéutica de las propiedades ácido-base, luego del desarrollo teórico de la Unidad Nro 2: \textit{\textbf{“Administración, ionización y acción de fármacos”}}, los objetivos del dictado del presente Seminario son los siguientes:
+
+\begin{itemize}
+	\item Conocer el concepto e importancia de la constante de disociación ácida (pKa) como propiedad fisicoquímica de una molecula bioactiva.
+	
+	\item Identificar la relevancia del pH en relación con los equilibrios de ionización de un fármaco en los distintos compartimentos del organismo.
+	
+	\item Reconocer grupos funcionales ionizables de relevancia biofarmacéutica.
+	
+	\item Comprender el mecanismo de acción de algunos fármacos con propiedades ácido-base definidas, mediante la integración de conceptos de pKa, pH y grado de ionización.
+	
+\end{itemize}
+
+Para el desarrollo del Seminario nos valeremos de la utilización de algoritmos computacionales para asistir en la comprensión de los conceptos discutidos y realizar cálculos de equilibrios de ionización.
+
+\begin{center}
+	\noindent\rule{14cm}{2pt}
+\end{center}
+
+
+\begin{center}
+\textbf{\Large Resolución de ejercicios y problemas}
+\end{center}
+
+
+\section{Nomemclatura SMILES y representación de estructuras químicas}
+
+La utilización de recursos informáticos para facilitar el conocimiento humano abarca todas la disciplinas, incluso las científicas. En ese sentido, la utilización de computadoras para asistir el cómputo de propiedades y características fisicoquímicas de moléculas, constituye una herramienta muy poderosa y versátil en Química Medicinal.\\
+
+Un primer requerimiento para poder utilizar computadoras con fines de análisis fisicoquímico, es lograr representar las moléculas empleando una nomenclatura y lenguaje específico. Dicha nomenclatura se conoce como \textbf{\textit{SMILES}}, y consta de una serie de reglas para poder representar adecuadamente una estructura específica. En los siguientes artículos se pueden consultar dichas reglas:
+
+\begin{itemize}
+	\item Artículo en \href{https://es.wikipedia.org/wiki/SMILES}{\textcolor{blue}{\texttt{Wikipedia}}}
+	\item Artículo en \href{https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html}{\textcolor{blue}{\texttt{Daylight}}}
+	\item Tutorial de la \href{https://archive.epa.gov/med/med_archive_03/web/html/smiles.html}{\textcolor{blue}{\texttt{EPA-US}}}	
+\end{itemize}
+
+\subsection{Actividad: Representación de moléculas en formato SMILES}
+
+Empleando computadoras, utilizaremos nomenclatura SMILES para practicar la representación de diversas moléculas de interés terapéutico. Para ello, empleando los scripts provistos construir las siguientes estructuras:
+
+\begin{itemize}
+	\item \textbf{Etanol:} \texttt{CCO}
+	\item \textbf{Propanol:} \texttt{CCCO}
+	\item \textbf{Ciclohexano:} \texttt{C1CCCCC1}
+	\item \textbf{Benceno:} \texttt{c1ccccc1}
+	\item \textbf{Ácido salicílico:} \texttt{OC(=O)C1=CC=CC=C1O}
+	\item \textbf{Ácido acetilsalicílico:} \texttt{CC(=O)OC1=CC=CC=C1C(O)=O}
+\end{itemize}
+
+La utilización de nomenclatura SMILES constituye además una forma sencilla y compacta de archivar estructuras químicas en una base de datos. Un ejemplo de ello es la base de datos \href{https://go.drugbank.com/}{\textcolor{blue}{\texttt{Drugbank}}}, la cual incluye información respecto de información farmacológica de moleculas bioactivas, incluyendo en un campo su nomenclatura SMILES. En el siguiente link es posible encontrar un ejemplo \href{https://go.drugbank.com/drugs/DB00945}{\textcolor{blue}{\texttt{Ejemplo}}}.
+
+
+\section{Propiedades ácido-base. Concepto de pKa.}
+
+En relación al análisis de las propiedades ácido-base de una molécula, la capacidad de identificar grupos ionizables constituye un aspecto central. 
+
+En la Tabla \ref{tab:grupos_funcionales} se presentan algunos de los grupos funcionales mas frecuentes que se encuentran presentes en moléculas bioactivas. Como puede observase, algunos grupos funcionales no presentan relevancia ácido base, mientras que otros se comportan como ácido o base. 
+
+
+% This command is to center the content in the cell.
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+% This sets the cellspace package to manage the spaces in the table
+\newcommand\cincludegraphics[2][]{\raisebox{-0.3\height}{\includegraphics[#1]{#2}}}
+
+\begin{longtable}{|P{8cm}|P{8cm}|}
+	
+	\hline 
+	~ \newline \textbf{Alcoholes alifáticos} \newline Sin ionización \newline  \includegraphics{Imagenes/alcoholes_alifaticos.png} &  
+	~ \newline \textbf{Ácidos carboxílicos} \newline Ácido \newline \includegraphics{Imagenes/acidos_carboxilicos.png} 
+	\\ 
+	\hline
+	~ \newline \textbf{Alcoholes aromáticos} \newline Acido \newline \includegraphics{Imagenes/../Imagenes/alcoholes_aromaticos.png} & 
+	~ \newline \textbf{Aminas primarias}  \newline Base \newline \includegraphics{Imagenes/aminas_primarias.png}
+	\\
+	\hline
+	~ \newline \textbf{Tioles aromáticos} \newline Ácido \newline \includegraphics{Imagenes/tioles_aromaticos.png} & 
+	~ \newline \textbf{Aminas secundarias} \newline Base \newline \includegraphics{Imagenes/aminas_secundarias.png} \\
+	\hline
+	~ \newline \textbf{Amidas} \newline Sin ionización \newline \includegraphics{Imagenes/amidas.png} & 
+	~ \newline \textbf{Aminas terciarias} \newline Base \newline \includegraphics{Imagenes/aminas_terciarias.png} \\
+	\hline
+	~ \newline \textbf{N-Arilsulfonamidas} \newline Ácido \newline \includegraphics{Imagenes/../Imagenes/n_aryl_sulfonamidas.png} & 
+	~ \newline \textbf{Aminas aromáticas} \newline Base \newline \includegraphics{Imagenes/aminas_aromaticas.png}  \\
+	\hline
+	~ \newline \textbf{Ésteres} \newline Sin ionización \newline \includegraphics{Imagenes/esteres.png} & 
+	~ \newline \textbf{Cetonas} \newline Sin ionización \newline \includegraphics{Imagenes/cetonas.png}  \\
+	\hline
+	\caption{Resúmen de principales grupos funciones presentes en moléculas de interés terapéutico.} % needs to go inside longtable environment
+	\label{tab:grupos_funcionales}
+	
+\end{longtable}
+
+
+\subsection{Actividad: Equilibrio de ionización y pKa.}
+
+% This code will label items nested and according to the section
+\renewcommand{\labelenumi}{\thesubsection.\arabic{enumi}}
+
+\begin{enumerate}
+	\item Explique con sus palabras y utilizando reacciones químicas qué entiende por ácido y base, basándose en las 3 teorías principales (Arrhenius, Brønsted-Lowry y Lewis).
+	
+	\item Explique con sus palabras qué entiende por efecto inductivo y efecto de resonancia
+
+	\item Como veremos mas en detalle en secciones posteriores, la fracción de fármaco ionizado y no-ionizado en solución es función del pH del medio y de su
+	constante de disociación ácida (pKa). En base a ello, responda las siguientes preguntas:
+		\begin{enumerate}
+			\item Defina con sus palabras constante de disociación ácida o Ka de una sustancia.
+			\item ¿Por qué se utiliza el logaritmo negativo de la Ka (pKa)?
+			\item ¿Qué es el pKa de una sustancia básica o alcalina?
+			\item  El pKa y el grado de ionización de un fármaco pueden influir en las tres etapas
+			fundamentales de todo fármaco (farmacéutica, farmacocinética y farmacodinámica). Plantee al menos un ejemplo de dicha influencia en cada una de ellas.
+		\end{enumerate}
+		
+	\item Empleando la computadora, utilice el script de Python para identificar grupos ácido-base en moléculas de uso terapéutico.
+	
+\end{enumerate}
+	
+\section{Equilibrio ácido-base.}
+	
+	El equilibrio de ionización de un \textbf{ácido} en agua puede expresarse en términos de sus reactivos y productos planteando la siguiente ecuación:
+
+	\begin{center}
+	
+		\setlength{\fboxsep}{10pt}
+		\fbox{HA + H$_2$O $\rightleftarrows$ H$_3$O$^+$ + A$^-$}
+
+		\end{center}
+
+
+	La constante de equilibrio definida para tal reacción puede escribirse como :
+		
+		\begin{equation}
+			\mbox{$Ka$ = \Large $\frac{[H^+][A^-]}{[HA]}$}
+			\label{eqn:equilibrio1}
+		\end{equation}
+
+	
+
+	Aplicando la inversa del logaritmo a la Ec. \ref{eqn:equilibrio1} definimos el valor de pKa (Ec. \ref{eqn:equilibrio2}):
+
+		\begin{equation}
+			\mbox{pKa = -log Ka}
+			\label{eqn:equilibrio2}
+		\end{equation}
+	
+	~
+		
+	Para el caso de una \textbf{base}, el equilibrio de ionización se representa de la siguiente manera:
+	
+		\begin{center}
+
+			\setlength{\fboxsep}{10pt}
+			\fbox{{B + H$_2$O $\rightleftarrows$ BH$^+$ + O$^-$}}
+			\label{eqn:equilibrio3}
+		\end{center}
+		
+		
+		La constante de equilibrio definida para tal reacción puede escribirse como :
+		
+		\begin{equation}
+			\mbox{$Kb$ = \Large $\frac{[BH^+][OH^-]}{[B]}$}
+			\label{eqn:equilibrio4}
+		\end{equation}
+		
+		Aplicando la inversa del logaritmo a la Ec. \ref{eqn:equilibrio4} definimos el valor de pKa:
+		
+		\begin{equation}
+			\mbox{pKb = -log Kb}
+		\end{equation}
+
+	
+	\subsection{Actividad: Equilibrio ácido-base.}
+	
+	En base a esto, indique si las siguientes afirmaciones son verdaderas o falsas y justifique.
+	
+		\begin{enumerate}
+			\item Cuanto más ácido sea un compuesto, menor será su pKa y mayor su ionización en agua.
+
+			\item Cuanto más básica sea una sustancia, mayor será el pKa de su ácido conjugado y menor será su ionización en agua.
+						
+			\item El equilibrio de ionización de la especie A- en agua está definido por una constante básica (Kb).
+			
+			\item El equilibrio de ionización de la especie BH+ en agua está definido por una constante básica (Kb).
+		\end{enumerate}	
+
+
+
+\section{Relación pH-pKa: Ecuación de Henderson-Hasselbach.}
+
+\textbf{Para un ácido:}\\
+
+Utilizando la ecuación de Henderson-Hasselbach:
+
+	\begin{equation}
+		pH = pKa + log \frac{[A^-]}{[HA]}
+		\label{eqn:Henderson-Hasselbach_acido_1}
+	\end{equation}
+
+Realizando un arreglo de la ecuación tenemos:
+
+	\begin{equation}
+		\boxed{pH - pKa = log \frac{[A^-]}{[HA]}}
+		\label{eqn:Henderson-Hasselbach_acido_2}
+	\end{equation}
+
+Si consideramos que la concentración de la forma ionizada es X,
+
+	\begin{equation*}
+		[A^-] = X
+	\end{equation*}
+
+La concentración de la forma no ionizada será el 100\% menos X:
+
+	\begin{equation*}
+		[HA] = 100 - X
+	\end{equation*}
+	
+entonces,
+
+	\begin{equation}
+		pH - pKa = log \frac{[X]}{[100-X]}
+		\label{eqn:Henderson-Hasselbach_3}
+	\end{equation}
+
+
+\textbf{Para una base:}\\
+
+Utilizando la ecuación de Henderson-Hasselbach:
+
+\begin{equation}
+	pH = pKa + log \frac{[B]}{[BH^+]}
+	\label{eqn:Henderson-Hasselbach_base_1}
+\end{equation}
+
+Realizando un arreglo de la ecuación tenemos:
+
+\begin{equation}
+	\boxed{pH - pKa = log \frac{[B]}{[BH^+]}}
+	\label{eqn:Henderson-Hasselbach_base_2}
+\end{equation}
+
+
+Por lo tanto, conociendo las propiedades ácido-base de un fármaco, su pKa y el valor de pH del medio se puede tanto estimar como calcular el porcentaje de su forma ionizada y no ionizada.
+
+\subsection{Actividad: aplicación de la ecuación de Henderson-Hasselbach}
+
+\begin{enumerate}
+	\item Relacionando propiedades ácido-base, pH y pKa, ¿cuándo se considera que tenemos solamente especie no ionizada en solución y cuándo solamente especie ionizada?
+	
+	\item Dados los siguientes fármacos:
+	
+		\begin{enumerate}
+			\centering
+			\item \textbf{Sulfametoxazol:} \\ {\small CC1=CC(NS(=O)(=O)C2=CC=C(N)C=C2)=NO1}
+			\item \textbf{Diclofenac:} \\ {\small OC(=O)CC1=CC=CC=C1NC1=C(Cl)C=CC=C1Cl}
+			\item Morfina: \\ {\small [H][C@@]12OC3=C(O)C=CC4=C3[C@@]11CCN(C)[C@]\newline([H])(C4)[C@]1([H])C=C[C@@H]2O}
+			\item \textbf{Epinefrina:} \\ {\small CNC[C@H](O)C1=CC(O)=C(O)C=C1}
+			\item \textbf{Ibuprofeno:} \\ {\small CC(C)CC1=CC=C(C=C1)C(C)C(O)=O}
+			\item \textbf{Benzocaína:} \\ {\small CCOC(=O)C1=CC=C(N)C=C1}
+			\item \textbf{Amoxicilina:} \\ {\small CC3(C)SC2C(NC(=O)C(N)c1ccc(O)cc1)C(=O)N2C3C(O)=O}
+			\item \textbf{Fenitoína:} \\ {\small O=C1NC(=O)C(N1)(C1=CC=CC=C1)C1=CC=CC=C1}
+			\item \textbf{Clorpromazina:} \\ {\small CN(C)CCCN1C2=CC=CC=C2SC2=C1C=C(Cl)C=C2}
+			\item \textbf{Oxacilina:} \\ {\small CC1=C(C(=NO1)C2=CC=CC=C2)C(=O)N[C@H]3[C@@H]4N(C3=O) \newline [C@H](C(S4)(C)C)C(=O)O}
+		\end{enumerate}
+
+
+		\begin{enumerate}
+			\item Busque su estructura química, su acción terapéutica/uso y su pKa.
+			\item Identifique sus propiedades ácido-base y escriba el equilibrio de ionización en agua.
+			\item Ordénelos de menor a mayor según su fuerza ácida o básica.
+			\item Estime, sin hacer cálculos, a qué pH se encontrarán disponibles en mayor proporción para ser absorbidos.
+			\item Calcule el porcentaje de las especies ionizada y neutra en estómago (pH = 1), en intestino (pH = 5.3) y en plasma (pH = 7.4).
+		\end{enumerate}
+
+	\end{enumerate}
+
+\section{Ionización y actividad biológica: anestésicos locales.}
+
+Lea los siguientes fragmentos extraídos de “Farmacología Médica en Esquemas” (M.J. Neal, 1o Ed., 1990, 16-17). Relaciónelos con la Figura 1.
+
+\begin{itemize}
+	\item “Los anestésicos locales son fármacos capaces de prevenir o anular el dolor al causar un bloqueo reversible de la conducción nerviosa. La mayoría de ellos son bases	débiles que se encuentran, al pH corporal, en sus formas protonadas”.
+	
+	\item  “La lidocaína es el agente más ampliamente utilizado. Actúa más rápidamente y es más estable que la mayoría de los anestésicos locales”.
+	
+	\item “La procaína se utiliza menos debido a su dificultad para atravesar las membranas	(tiene un valor de pKa alto) y a que, por su acción vasodilatadora, tiene breve duración de acción”.
+	
+	\item  “Los anestésicos locales penetran en el interior del axón en forma de bases libres neutras liposolubles. Una vez dentro, las formas ionizadas ingresan y bloquean los canales de Na$^+$ tras unirse a un receptor. Esto bloquea el canal, principalmente al impedir la apertura de las compuertas-h (es decir, aumentando la inactivación). Tantos son los canales inactivados, que su número cae por debajo del mínimo necesario para que la despolarización alcance el umbral; y al no generarse potenciales de acción, finalmente los nervios resultan bloqueados”.
+	
+	\item “Los anestésicos locales cuaternarios (completamente protonados) solamente actúan si son inyectados dentro del axón nervioso”.
+
+\end{itemize}
+
+Integrando todo lo aprendido en las actividades anteriores, responda:
+
+\renewcommand{\labelenumi}{\thesection.\arabic{enumi}}
+
+\begin{enumerate}
+	\item ¿Por qué la Lidocaína tiene una acción más potente que la Procaína, considerando que ambas fármacos tienen que atravesar la membrana del axón?
+	
+	\item  ¿Por qué la Procaína es más potente si no se tiene en consideración el pasaje del fármaco a través de la membrana del axón?
+	
+	\item ¿Con qué fase farmacéutica podría relacionar la acción anestésica de los fármacos?
+
+\end{enumerate}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.35]{Imagenes/Anestesicos_locales.png}
+	\caption{Ionización y actividad biológica de anestésicos locales.}
+\end{figure}
+
+
+\end{document}
