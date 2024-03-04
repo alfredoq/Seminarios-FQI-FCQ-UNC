@@ -7,6 +7,7 @@ from rdkit.Chem import rdDepictor
 from IPython.display import SVG
 import py3Dmol
 import numpy as np
+from scipy.special import exp10
 import matplotlib.pyplot as plt
 
 
@@ -109,7 +110,7 @@ def calculate_ionized_fraction(pka,specie='acid',ph1=1, ph2=14,step=0.5,return_d
     
     for ph in np.arange(ph1, ph2+step, step):
         if specie == 'acid':
-            ionized_fraction = round((np.exp(ph - pka) * 100) / (np.exp(ph - pka) + 1),2)
+            ionized_fraction = round((exp10(ph - pka) * 100) / (exp10(ph - pka) + 1),2)
             neutral_fraction = round(100-ionized_fraction,2)
             if return_data == 0:
                 print(f"pH: {ph}")
@@ -117,7 +118,7 @@ def calculate_ionized_fraction(pka,specie='acid',ph1=1, ph2=14,step=0.5,return_d
                 print(f"Especie: {specie} - porcentaje de especie neutra [AH-]: {neutral_fraction} % \n")
                 print(f'-------------------------------------------------------------------------')  
         elif specie == 'base':
-            ionized_fraction = round(100 - ((np.exp(ph - pka) * 100) / (np.exp(ph - pka) + 1)),2)
+            ionized_fraction = round(100 - ((exp10(ph - pka) * 100) / (exp10(ph - pka) + 1)),2)
             neutral_fraction = round(100-ionized_fraction,2)
             if return_data == 0:
                 print(f"pH: {ph}")
