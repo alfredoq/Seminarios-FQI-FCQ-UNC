@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 def construct_molecule_2d(smiles):
     mol = Chem.MolFromSmiles(smiles)
     img = Draw.MolToImage(mol)
-    display(mol)
+    #display(mol)
 
     return mol
 
@@ -140,13 +140,22 @@ def calculate_ionized_fraction(pka,specie='acid',ph1=1, ph2=14,step=0.5,return_d
 def plot_ionized_fraction(pka,specie='acid',ph1=1, ph2=14,step=0.5):
     if specie == 'acid':
         ph_values_list, ionized_fraction_list, neutral_fraction_list = calculate_ionized_fraction(pka,specie,ph1, ph2,step,return_data=1)
-        plt.scatter(ph_values_list,ionized_fraction_list)
+        
+        # Plot the ionized fraction
+        plt.scatter(ph_values_list,ionized_fraction_list,label='Ionizada',c='r')
         plt.plot(ph_values_list,ionized_fraction_list,c='r')
+        
+        # Plot the neutral fraction
+        plt.scatter(ph_values_list,neutral_fraction_list,label='Neutra',c='g',alpha=0.5)
+        plt.plot(ph_values_list,neutral_fraction_list,c='g',alpha=0.5)
+        
+        
         plt.xticks(np.arange(ph1, ph2+step, step),rotation='vertical')
         plt.yticks(np.arange(0, 100, 10))
         plt.title("Ionized fraction of [A-] for specie ACID")
         plt.xlabel("pH")
         plt.ylabel("[A-] %")
+        plt.legend()
 
     elif specie == 'base':
         ph_values_list, ionized_fraction_list, neutral_fraction_list = calculate_ionized_fraction(pka,specie,ph1, ph2,step,return_data=1)
