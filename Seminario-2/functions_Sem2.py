@@ -151,9 +151,9 @@ def hydrolysis_products(smiles):
                         hydrolysis_products_list.append(product_amide_smiles)
 
     print("Reactivo")
-    mol2d = construct_molecule_2d(input_smiles)
+    mol2d = construct_molecule_2d(smiles)
     display(mol2d)
-    viewer = MolTo3DView(input_smiles, surface=False)
+    viewer = MolTo3DView(smiles, surface=False)
     viewer.show()
     print("Producto(s)")
     for unique_product in hydrolysis_products_list:
