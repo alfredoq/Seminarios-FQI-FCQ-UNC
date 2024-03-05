@@ -340,7 +340,6 @@ def graficar_cineticas(tiempo, datos, parametros_optimizados, orden, color_punto
         plt.plot(tiempo, cinetica_orden_cero(tiempo, *parametros_optimizados[:2]), label='Ajuste de orden cero', color=color_linea)
         plt.legend().set_visible(False)
 
-    elif orden == 2:
         plt.ylabel('ln(Concentración)')
         plt.plot(tiempo, cinetica_orden_uno(tiempo, *parametros_optimizados[:2]), label='Ajuste de orden uno', color=color_linea)
         plt.legend().set_visible(False)
@@ -372,23 +371,23 @@ def analizar_cineticas(df, coef_extincion=1, longitud_camino=1):
     # Orden 0
     constante_ajuste_0, ordenada_al_origen_ajuste_0, r2_ajuste_0 = ajustar_cinetica_orden_cero(df['tiempo'], df['concentracion'])
     print("Orden 0:")
-    print(f"Ordenada al origen de ajuste: {constante_ajuste_0}")
-    print(f"Constante de ajuste: {ordenada_al_origen_ajuste_0}")
-    print(f"Coeficiente de determinación (r²): {r2_ajuste_0}")
+    print(f"Ordenada al origen de ajuste: {round(constante_ajuste_0,4)}")
+    print(f"Constante de ajuste: {round(ordenada_al_origen_ajuste_0,6)}")
+    print(f"Coeficiente de determinación (r²): {round(r2_ajuste_0,4)}")
 
     # Orden 1
     constante_ajuste_1, ordenada_al_origen_ajuste_1, r2_ajuste_1 = ajustar_cinetica_orden_uno(df['tiempo'], np.log(df['concentracion']))
     print("\nOrden 1:")
-    print(f"Ordenada al origen de ajuste: {constante_ajuste_1}")
-    print(f"Constante de ajuste: {ordenada_al_origen_ajuste_1}")
-    print(f"Coeficiente de determinación (r²): {r2_ajuste_1}")
+    print(f"Ordenada al origen de ajuste: {round(constante_ajuste_1,4)}")
+    print(f"Constante de ajuste: {round(ordenada_al_origen_ajuste_1,6)}")
+    print(f"Coeficiente de determinación (r²): {round(r2_ajuste_1,4)}")
 
     # Orden 2
     constante_ajuste_2, ordenada_al_origen_ajuste_2, r2_ajuste_2 = ajustar_cinetica_orden_dos(df['tiempo'], 1 / df['concentracion'])
     print("\nOrden 2:")
-    print(f"Ordenada al origen de ajuste: {1/constante_ajuste_2}")
-    print(f"Constante de ajuste: {ordenada_al_origen_ajuste_2}")
-    print(f"Coeficiente de determinación (r²): {r2_ajuste_2}")
+    print(f"Ordenada al origen de ajuste: {round(1/constante_ajuste_2,4)}")
+    print(f"Constante de ajuste: {round(ordenada_al_origen_ajuste_2,6)}")
+    print(f"Coeficiente de determinación (r²): {round(r2_ajuste_2,4)}")
 
     # Gráficos
     plt.figure(figsize=(15, 5))
