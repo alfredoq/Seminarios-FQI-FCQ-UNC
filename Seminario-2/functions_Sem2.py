@@ -303,8 +303,9 @@ def ajustar_cinetica_orden_cero(tiempo, concentracion):
 
     concentracion_ajustada = cinetica_orden_cero(tiempo, *parametros_optimizados)
     r2 = r2_score(concentracion, concentracion_ajustada)
+    sse = np.sum(np.square(concentracion - concentracion_ajustada))
 
-    return parametros_optimizados[0], parametros_optimizados[1], r2
+    return parametros_optimizados[0], parametros_optimizados[1], r2, sse
 
 def cinetica_orden_uno(t, c0, k):
     return c0 - k * t
@@ -312,8 +313,9 @@ def cinetica_orden_uno(t, c0, k):
 def ajustar_cinetica_orden_uno(tiempo, concentracion_ln):
     slope, intercept, r_value, p_value, std_err = linregress(tiempo, concentracion_ln)
     r2 = r_value**2
+    sse = np.sum(np.square(concentracion_ln - (slope * tiempo + intercept)))
 
-    return intercept, -slope, r2
+    return intercept, -slope, r2, sse
 
 def cinetica_orden_dos(t, c0, k):
     return (1 / c0) + k * t
@@ -324,8 +326,9 @@ def ajustar_cinetica_orden_dos(tiempo, inversa_concentracion):
 
     concentracion_ajustada = cinetica_orden_dos(tiempo, *parametros_optimizados)
     r2 = r2_score(inversa_concentracion, concentracion_ajustada)
+    sse = np.sum(np.square(inversa_concentracion - concentracion_ajustada))
 
-    return parametros_optimizados[0], parametros_optimizados[1], r2
+    return parametros_optimizados[0], parametros_optimizados[1], r2, sse
 
 def graficar_cineticas(tiempo, datos, parametros_optimizados, orden, color_puntos='blue', color_linea='red'):
     tiempo = np.array(tiempo)
@@ -367,22 +370,32 @@ def graficar_cineticas(tiempo, datos, parametros_optimizados, orden, color_punto
 def analizar_cineticas(df, coef_extincion=1, longitud_camino=1):
     df = generar_dataframe_desde_Abs(df, coef_extincion, longitud_camino)
 
+    # Inicializar listas para almacenar métricas de cada orden
+    r2_values = []
+    sse_values = []
+
     # Orden 0
-    constante_ajuste_0, ordenada_al_origen_ajuste_0, r2_ajuste_0 = ajustar_cinetica_orden_cero(df['tiempo'], df['concentracion'])
+    constante_ajuste_0, ordenada_al_origen_ajuste_0, r2_ajuste_0, sse_ajuste_0 = ajustar_cinetica_orden_cero(df['tiempo'], df['concentracion'])
+    r2_values.append(r2_ajuste_0)
+    sse_values.append(sse_ajuste_0)
     print("Orden 0:")
     print(f"Ordenada al origen de ajuste: {constante_ajuste_0}")
     print(f"Constante de ajuste: {ordenada_al_origen_ajuste_0}")
     print(f"Coeficiente de determinación (r²): {r2_ajuste_0}")
 
     # Orden 1
-    constante_ajuste_1, ordenada_al_origen_ajuste_1, r2_ajuste_1 = ajustar_cinetica_orden_uno(df['tiempo'], np.log(df['concentracion']))
+    constante_ajuste_1, ordenada_al_origen_ajuste_1, r2_ajuste_1, sse_ajuste_1 = ajustar_cinetica_orden_uno(df['tiempo'], np.log(df['concentracion']))
+    r2_values.append(r2_ajuste_1)
+    sse_values.append(sse_ajuste_1)
     print("\nOrden 1:")
     print(f"Ordenada al origen de ajuste: {constante_ajuste_1}")
     print(f"Constante de ajuste: {ordenada_al_origen_ajuste_1}")
     print(f"Coeficiente de determinación (r²): {r2_ajuste_1}")
 
     # Orden 2
-    constante_ajuste_2, ordenada_al_origen_ajuste_2, r2_ajuste_2 = ajustar_cinetica_orden_dos(df['tiempo'], 1 / df['concentracion'])
+    constante_ajuste_2, ordenada_al_origen_ajuste_2, r2_ajuste_2, sse_ajuste_2 = ajustar_cinetica_orden_dos(df['tiempo'], 1 / df['concentracion'])
+    r2_values.append(r2_ajuste_2)
+    sse_values.append(sse_ajuste_2)
     print("\nOrden 2:")
     print(f"Ordenada al origen de ajuste: {1/constante_ajuste_2}")
     print(f"Constante de ajuste: {ordenada_al_origen_ajuste_2}")
@@ -403,7 +416,22 @@ def analizar_cineticas(df, coef_extincion=1, longitud_camino=1):
     ordenes = ['Orden 0', 'Orden 1', 'Orden 2']
     mejor_orden = ordenes[np.argmax(r2_values)]
 
-    print(f"\nMejor orden de reacción: {mejor_orden}")
+     # Determinar el mejor orden según r2 y SSE
+    mejor_orden_r2 = np.argmax(r2_values)
+    mejor_orden_sse = np.argmin(sse_values)
+
+    print("\nResultados según r²:")
+    print(f"Orden 0: {r2_values[0]}")
+    print(f"Orden 1: {r2_values[1]}")
+    print(f"Orden 2: {r2_values[2]}")
+
+    print("\nResultados según SSE:")
+    print(f"Orden 0: {sse_values[0]}")
+    print(f"Orden 1: {sse_values[1]}")
+    print(f"Orden 2: {sse_values[2]}")
+
+    print(f"\nMejor orden según r²: Orden {mejor_orden_r2}")
+    print(f"Mejor orden según SSE: Orden {mejor_orden_sse}")
 
 
 def calcular_tiempo_vida_media(orden_reaccion, k, c0, t50):
