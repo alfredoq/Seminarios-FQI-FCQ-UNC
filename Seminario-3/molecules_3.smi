@@ -1,0 +1,5 @@
+CCC1=CC=C(N)C=C1 compound1
+CC1CNCCC1C1=CC=C(O)C=C1 compound2
+OC(=O)CCCC1=CC(F)=C(F)C(F)=C1 compound3
+OC1=CC=C2C(CCC3=CC=CC=C23)=C1 compound4
+CC(C)CC1=C(O)C=C(C=C1)C(C)C(O)=O compound5
