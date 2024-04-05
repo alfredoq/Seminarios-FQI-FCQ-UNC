@@ -21,6 +21,16 @@ import warnings
 import py3Dmol
 from itertools import combinations
 
+def optimize_conf(mol):
+    if mol is not None:
+        mol = Chem.AddHs(mol)
+        AllChem.EmbedMolecule(mol)
+        AllChem.MMFFOptimizeMolecule(mol, maxIters=200)
+        return mol
+    else:
+        return None
+
+
 def MolTo3DView(mol, size=(300, 300), style="stick", surface=False, opacity=0.5):
     """Draw molecule in 3D
     
@@ -37,7 +47,8 @@ def MolTo3DView(mol, size=(300, 300), style="stick", surface=False, opacity=0.5)
         viewer: py3Dmol.view, a class for constructing embedded 3Dmol.js views in ipython notebooks.
     """
     assert style in ('line', 'stick', 'sphere', 'carton')
-    mblock = Chem.MolToMolBlock(mol)
+    mol_opt = optimize_conf(mol)
+    mblock = Chem.MolToMolBlock(mol_opt)
     viewer = py3Dmol.view(width=size[0], height=size[1])
     viewer.addModel(mblock, 'mol')
     viewer.setStyle({style:{}})
